@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "ICT SHOP";
+
+}
+
+
+<br />
+<div class="row">
+    <div class="col-md-8">
+        @Html.Action("SlidePartial", "Home")
+    </div>
+    <div class="col-md-4">
+        <img src="~/HinhanhSP/qc3.gif" class="img-responsive" alt="" />
+    </div>
+</div>
+<div>
+    <img class="img-responsive" src="~/HinhanhSP/ban1.jpg" />
+</div>
+<br />
+<div class="spnoibat">
+    <div class="row">
+
+        <h3> SẢN PHẨM NỔI BẬT</h3>
+        <div class="col-md-4">
+            <img src="~/HinhanhSP/spnb1.png" class="img-responsive" alt="" />
+        </div>
+        <div class="col-md-4">
+            <img src="~/HinhanhSP/spnb2.png" class="img-responsive" alt="" />
+        </div>
+        <div class="col-md-4">
+            <img src="~/HinhanhSP/spnb3.png" class="img-responsive" alt="" />
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Tạo phong cách cho form tìm kiếm */
+    .search-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+        .search-form select,
+        .search-form input[type="text"],
+        .search-form input[type="number"],
+        .search-form button {
+            width: calc(50% - 10px);
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .search-form button {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+            .search-form button:hover {
+                background-color: #0056b3;
+            }
+</style>
+
+<h3>TÌM KIẾM SẢN PHẨM</h3>
+<form action="@Url.Action("Search", "Home")" method="get" class="search-form">
+    <input type="text" name="query" placeholder="Tìm sản phẩm..." />
+
+    <!-- Ô chọn Hãng (Mahang) -->
+    <select name="Mahang">
+        <option value="">Chọn hãng</option>
+        <option value="1">Sam Sung</option>
+        <option value="2">Apple</option>
+        <option value="3">Xiaomi</option>
+        <option value="4">Vsmart</option>
+        <option value="5">Bphone</option>
+        <option value="6">Realme</option>
+    </select>
+
+    <!-- Ô chọn Hệ điều hành (Mahdh) -->
+    <select name="Mahdh">
+        <option value="">Chọn hệ điều hành</option>
+        <option value="1">Android</option>
+        <option value="2">IOS</option>
+        <option value="3">VOS</option>
+    </select>
+
+    <!-- Các tùy chọn khác -->
+    <input type="number" name="MinPrice" placeholder="Giá tối thiểu" />
+    <input type="number" name="MaxPrice" placeholder="Giá tối đa" />
+
+    <select name="Thesim">
+        <option value="">Chọn loại SIM</option>
+        <option value="1">Single SIM</option>
+        <option value="2">Dual SIM</option>
+    </select>
+
+    <input type="number" name="Bonhotrong" placeholder="Bộ nhớ trong (GB)" />
+    <input type="number" name="Ram" placeholder="RAM (GB)" />
+
+    <!-- Dropdown sắp xếp -->
+    <select name="SortOrder">
+        <option value="">Sắp xếp theo</option>
+        <option value="price-asc">Giá tăng dần</option>
+        <option value="price-desc">Giá giảm dần</option>
+        <option value="name-asc">Tên từ A-Z</option>
+        <option value="name-desc">Tên từ Z-A</option>
+        <option value="newest">Mới nhất</option>
+    </select>
+
+    <button type="submit">Tìm kiếm</button>
+</form>
+
+
+<div class="danhmuc">
+    @Html.Action("DanhmucPartial", "Danhmuc")
+</div>
+<div class="dt">
+
+    @Html.Action("dtiphonePartial", "Sanpham")
+</div>
+<div class="dt">
+
+    @Html.Action("dtsamsungpartial", "Sanpham")
+</div>
+
+<div class="dt">
+
+    @Html.Action("dtxiaomipartial", "Sanpham")
+</div>
+
+<div class="row">
+    <h2> Tin tức sản phẩm</h2>
+    <div class="col-md-8">
+        Video
+    </div>
+    <div class="col-md-4">
+        Tin tức
+    </div>
+</div>
+
+
+
