@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eQtLvvQ0Z5A=",
+  "dgSpecHash": "Qx3ttUhc1hM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestIctShop.csproj",
+  "projectFilePath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestQLSP-QuocDat.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dat\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\Dat\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",

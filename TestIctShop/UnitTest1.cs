@@ -18,65 +18,219 @@ namespace TestIctShop
             driver = new ChromeDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Manage().Window.Maximize();
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        }
+
+        private void Login(string email, string password)
+        {
+            driver.Navigate().GoToUrl("https://localhost:44322/User/DangNhap");
+            driver.FindElement(By.Id("userMail")).SendKeys(email);
+            driver.FindElement(By.Id("password")).SendKeys(password);
+            driver.FindElement(By.XPath("//input[@value='Đăng nhập']")).Click();
+            wait.Until(d => d.Url.Contains("Admin/Home"));
         }
 
         [Test]
-        public void AdminProductManagementTest()
+        public void AddProductNoName()
         {
             try
             {
-                // 1️⃣ **Mở trang đăng nhập**
-                driver.Navigate().GoToUrl("https://localhost:44322/User/DangNhap");
+                // Đăng nhập với tài khoản Admin
+                Login("Admin@gmail.com", "12345678");
 
-                // 2️⃣ **Nhập email và mật khẩu**
-                driver.FindElement(By.Id("userMail")).SendKeys("Admin@gmail.com");
-                driver.FindElement(By.Id("password")).SendKeys("12345678");
-                driver.FindElement(By.XPath("//input[@value='Đăng nhập']")).Click();
-
-                wait.Until(d => d.Url.Contains("Admin/Home"));
-
-                // 3️⃣ **Nhấn vào nút 'Thêm mới' để mở form nhập sản phẩm**
-                IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+                // Nhấn vào nút 'Thêm mới'
+                IWebElement addButton = WaitForElement(By.XPath("//p/button[@class='btn-default']/a"), 10);
                 addButton.Click();
 
-                // 4️⃣ **Chờ form tải xong và nhập thông tin sản phẩm**
-                wait.Until(d => d.FindElement(By.Id("Tensp"))).SendKeys("Samsung Galaxy S25");
-                driver.FindElement(By.Id("Giatien")).SendKeys("25000000");
-                driver.FindElement(By.Id("Soluong")).SendKeys("10");
-                driver.FindElement(By.Id("Mota")).SendKeys("Điện thoại Samsung cao cấp");
-                driver.FindElement(By.Id("Thesim")).SendKeys("2");  // Nhập số sim
-                driver.FindElement(By.Id("Bonhotrong")).SendKeys("512"); // Nhập bộ nhớ trong
-                driver.FindElement(By.Id("Ram")).SendKeys("12"); // Nhập dung lượng RAM
+                // Nhập thông tin sản phẩm nhưng để tên trống
+                driver.FindElement(By.Id("Tensp")).SendKeys("");
+                driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
+                driver.FindElement(By.Id("Soluong")).SendKeys("100");
+                driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+                driver.FindElement(By.Id("Thesim")).SendKeys("2");
+                driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+                driver.FindElement(By.Id("Ram")).SendKeys("8");
 
-                // 5️⃣ **Chọn trạng thái sản phẩm mới**
-                IWebElement dropdownNewProduct = driver.FindElement(By.Id("Sanphammoi"));
-                SelectElement selectNewProduct = new SelectElement(dropdownNewProduct);
-                selectNewProduct.SelectByText("True"); // Chọn "Có" hoặc "Yes" tùy vào ngôn ngữ trang web
+                // Chọn trạng thái sản phẩm mới
+                new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
 
-                // 6️⃣ **Upload ảnh sản phẩm**
+                // Upload ảnh sản phẩm
                 IWebElement uploadFile = driver.FindElement(By.Id("Anhbia"));
-                uploadFile.SendKeys("/Images/files/mi31.jpg"); // Đổi đường dẫn ảnh phù hợp với hệ thống của bạn
+                uploadFile.SendKeys("/Images/files/ss3.jpg");
 
-                // 7️⃣ **Chọn hãng điện thoại và hệ điều hành**
-                SelectElement selectBrand = new SelectElement(driver.FindElement(By.Id("Mahang")));
-                selectBrand.SelectByText("Apple");
+                // Chọn hãng điện thoại và hệ điều hành
+                new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+                new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
 
-                SelectElement selectOS = new SelectElement(driver.FindElement(By.Id("Mahdh")));
-                selectOS.SelectByText("IOS");
+                // Nhấn nút 'Thêm mới sản phẩm'
+                IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+                submitButton.Click();
 
-                // 8️⃣ Nhấn nút 'Thêm mới sản phẩm'
-                driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']")).Click();
+                // Kiểm tra nếu có thông báo lỗi xuất hiện
+                bool isErrorDisplayed = driver.FindElements(By.ClassName("text-danger")).Count > 0;
 
-                //// Chờ cho trang chuyển hướng về Admin/Home
-                //wait.Until(d => d.Url.Contains("Admin/Home"));
+                // Kiểm tra xem sản phẩm có xuất hiện trong bảng Admin/Home không
+                bool isProductInTable = driver.FindElements(By.XPath("//table[contains(@class,'table-bordered')]//tr")).Count > 0;
 
-                // Chờ sản phẩm xuất hiện trong bảng
-                wait.Until(d => d.FindElements(By.XPath("//table[contains(@class,'table-bordered')]//tr/td[1]"))
-                                 .Any(e => e.Text.Contains("Samsung Galaxy S25")));
+                if (isErrorDisplayed || !isProductInTable)
+                {
+                    Console.WriteLine("✅ Test Passed: Sản phẩm không hợp lệ, không được thêm vào danh sách.");
+                }
+                else
+                {
+                    Console.WriteLine("❌ Test Failed: Sản phẩm không có tên nhưng vẫn xuất hiện trong bảng!");
+                    Assert.Fail("Sản phẩm không hợp lệ nhưng vẫn được thêm!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi trong quá trình kiểm thử: " + ex.Message);
+                throw;
+            }
+        }
+        [Test]
+        public void AddProduct()
+        {
+            try
+            {
+                // 🟢 Bước 1: Đăng nhập với tài khoản Admin
+                Login("Admin@gmail.com", "12345678");
 
-                // In ra thông báo kiểm tra thành công
-                Console.WriteLine("Sản phẩm Samsung Galaxy S25 đã xuất hiện trong bảng!");
+                // 🟢 Bước 2: Chờ và click vào nút 'Thêm mới'
+                IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+
+                // 🟢 Bước 3: Nhập thông tin sản phẩm hợp lệ
+                string productName = "Xiaomi Redmi K20 Pro";
+                driver.FindElement(By.Id("Tensp")).SendKeys(productName);
+                driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
+                driver.FindElement(By.Id("Soluong")).SendKeys("100");
+                driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+                driver.FindElement(By.Id("Thesim")).SendKeys("2");
+                driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+                driver.FindElement(By.Id("Ram")).SendKeys("8");
+
+                // 🟢 Bước 4: Chọn trạng thái, hãng, hệ điều hành
+                new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+                new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+                new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+
+                // 🟢 Bước 5: Upload ảnh sản phẩm
+                driver.FindElement(By.Id("Anhbia")).SendKeys("/Images/files/ss3.jpg");
+
+                // 🟢 Bước 6: Nhấn nút 'Thêm mới sản phẩm'
+                IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+
+                // 🟢 Bước 7: Chờ trang chuyển về Admin/Home
+                WaitForUrl("Admin/Home", 10);
+
+                // 🟢 Bước 8: Kiểm tra sản phẩm có xuất hiện trong bảng tại Admin/Home không
+                IWebElement productCell = WaitForElement(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]"), 10);
+                Assert.IsNotNull(productCell, "❌ Test Failed: Sản phẩm không xuất hiện trong bảng trên trang Admin/Home.");
+
+                Console.WriteLine("✅ Test Passed: Sản phẩm đã được thêm thành công và hiển thị trên Admin/Home!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi trong quá trình kiểm thử: " + ex.Message);
+                throw;
+            }
+        }
+        private void WaitForUrl(string expectedUrlPart, int timeoutInSeconds)
+        {
+            for (int i = 0; i < timeoutInSeconds * 2; i++) // Kiểm tra mỗi 0.5 giây
+            {
+                if (driver.Url.Contains(expectedUrlPart))
+                    return;
+                Thread.Sleep(500);
+            }
+            throw new TimeoutException($"❌ Lỗi: Không chuyển hướng đến {expectedUrlPart} sau {timeoutInSeconds} giây.");
+        }
+        private IWebElement WaitForElement(By by, int timeoutInSeconds)
+        {
+            for (int i = 0; i < timeoutInSeconds * 2; i++)  // Kiểm tra mỗi 0.5 giây
+            {
+                try
+                {
+                    var elements = driver.FindElements(by);
+                    if (elements.Count > 0 && elements[0].Displayed)
+                    {
+                        return elements[0]; // Trả về phần tử đầu tiên tìm thấy
+                    }
+                }
+                catch (Exception) { }
+
+                Thread.Sleep(500); // Chờ 0.5 giây trước khi kiểm tra lại
+            }
+
+            throw new TimeoutException($"❌ Lỗi: Không tìm thấy phần tử {by} sau {timeoutInSeconds} giây.");
+        }
+
+        [Test]
+        public void AddProduct_CheckDuplicate()
+        {
+            try
+            {
+                // 🟢 Bước 1: Đăng nhập với tài khoản Admin
+                Login("Admin@gmail.com", "12345678");
+
+                // 🟢 Bước 2: Kiểm tra số lần xuất hiện của sản phẩm trước khi thêm
+                string productName = "Xiaomi Redmi K20 Pro";
+                int initialCount = driver.FindElements(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]")).Count;
+
+                // 🟢 Bước 3: Click vào nút 'Thêm mới'
+                IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+
+                // 🟢 Bước 4: Nhập thông tin sản phẩm
+                driver.FindElement(By.Id("Tensp")).SendKeys(productName);
+                driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
+                driver.FindElement(By.Id("Soluong")).SendKeys("100");
+                driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+                driver.FindElement(By.Id("Thesim")).SendKeys("2");
+                driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+                driver.FindElement(By.Id("Ram")).SendKeys("8");
+
+                // 🟢 Bước 5: Chọn các giá trị dropdown
+                new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+                new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+                new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+
+                // 🟢 Bước 6: Upload ảnh
+                driver.FindElement(By.Id("Anhbia")).SendKeys("/Images/files/ss3.jpg");
+
+                // 🟢 Bước 7: Nhấn nút 'Thêm mới sản phẩm'
+                IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+
+                // 🟢 Bước 8: Kiểm tra có thông báo lỗi "Tên sản phẩm đã tồn tại" hay không
+                try
+                {
+                    IWebElement errorMessage = wait.Until(d => d.FindElement(By.XPath("//div[contains(@class,'alert-danger') and contains(text(),'Tên sản phẩm đã tồn tại')]")));
+                    Console.WriteLine("✅ Test Passed: Hệ thống hiển thị thông báo lỗi khi thêm trùng tên.");
+                    return; // Kết thúc test do hệ thống hoạt động đúng
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // Nếu không có thông báo lỗi, tiếp tục kiểm tra danh sách sản phẩm
+                }
+
+                // 🟢 Bước 9: Chờ trang Admin/Home tải lại
+                WaitForUrl("Admin/Home", 10);
+
+                // 🟢 Bước 10: Kiểm tra số lần xuất hiện của sản phẩm sau khi thêm
+                int finalCount = driver.FindElements(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]")).Count;
+
+                if (finalCount > initialCount)
+                {
+                    Console.WriteLine("❌ Test Failed: Sản phẩm đã bị thêm trùng nhưng hệ thống không báo lỗi!");
+                    Assert.Fail("Hệ thống cho phép thêm sản phẩm trùng tên.");
+                }
+                else
+                {
+                    Console.WriteLine("✅ Test Passed: Hệ thống không cho phép thêm sản phẩm trùng.");
+                }
             }
             catch (Exception ex)
             {

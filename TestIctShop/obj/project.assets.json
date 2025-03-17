@@ -1104,9 +1104,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestIctShop.csproj",
-      "projectName": "TestIctShop",
-      "projectPath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestIctShop.csproj",
+      "projectUniqueName": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestQLSP-QuocDat.csproj",
+      "projectName": "TestQLSP-QuocDat",
+      "projectPath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\TestQLSP-QuocDat.csproj",
       "packagesPath": "C:\\Users\\Dat\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\obj\\",
       "projectStyle": "PackageReference",
