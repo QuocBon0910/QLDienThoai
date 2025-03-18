@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TestQLSP-QuocDat")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d25296e6113dad4741edf14669492a1a7500159")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+236245ff8abdf373ad0a37bc378b5f97e4ac5c13")]
 [assembly: System.Reflection.AssemblyProductAttribute("TestQLSP-QuocDat")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TestQLSP-QuocDat")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
