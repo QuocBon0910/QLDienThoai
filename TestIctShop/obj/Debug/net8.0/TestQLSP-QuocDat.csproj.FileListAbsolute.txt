@@ -123,3 +123,11 @@ C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\obj\Debug\net8.0
 C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\obj\Debug\net8.0\TestQLSP-QuocDat.pdb
 C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\obj\Debug\net8.0\TestQLSP-QuocDat.genruntimeconfig.cache
 C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\obj\Debug\net8.0\ref\TestQLSP-QuocDat.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\ClosedXML.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\ClosedXML.Parser.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\ExcelNumberFormat.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\RBush.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\SixLabors.Fonts.dll
+C:\Users\Dat\Downloads\ictshop_aspnet-update2023-v1\TestIctShop\bin\Debug\net8.0\System.IO.Packaging.dll

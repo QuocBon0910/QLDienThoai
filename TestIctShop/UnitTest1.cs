@@ -2,6 +2,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using ClosedXML.Excel;
+using System.IO;
 using System;
 
 namespace TestIctShop
@@ -9,16 +11,38 @@ namespace TestIctShop
     [TestFixture]
     public class AdminProductTests
     {
+        private string filePath = @"D:\HK2-Y3\BDCLPM-LT\Test Case\Quản lý sản phẩm - Quốc Đạt.xlsx"; // Đường dẫn file Excel
+        private int currentRow = 2; // Bắt đầu từ dòng 2 (dòng 1 là tiêu đề)
+        private class TestResult
+        {
+            public string TestName { get; }
+            public string Status { get; }
+            public DateTime StartTime { get; }
+            public DateTime EndTime { get; }
+            public string ErrorMessage { get; }
+
+            public TestResult(string testName, string status, DateTime startTime, DateTime endTime, string errorMessage)
+            {
+                TestName = testName;
+                Status = status;
+                StartTime = startTime;
+                EndTime = endTime;
+                ErrorMessage = errorMessage;
+            }
+        }
+
         private IWebDriver driver;
         private WebDriverWait wait;
+ 
 
         [SetUp]
         public void Setup()
         {
             driver = new ChromeDriver();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Manage().Window.Maximize();
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+            driver.Manage().Window.Maximize();
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1));
         }
 
         private void Login(string email, string password)
@@ -30,7 +54,7 @@ namespace TestIctShop
             wait.Until(d => d.Url.Contains("Admin/Home"));
         }
 
-        [Test]
+        [Test, Order(2)]
         public void AddProductNoName()
         {
             try
@@ -88,55 +112,58 @@ namespace TestIctShop
                 throw;
             }
         }
-        [Test]
+
+        [Test, Order(1)]
         public void AddProduct()
         {
-            try
-            {
-                // 🟢 Bước 1: Đăng nhập với tài khoản Admin
-                Login("Admin@gmail.com", "12345678");
+                try
+                {
+                    // 🟢 Bước 1: Đăng nhập với tài khoản Admin
+                    Login("Admin@gmail.com", "12345678");
 
-                // 🟢 Bước 2: Chờ và click vào nút 'Thêm mới'
-                IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
-                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+                    // 🟢 Bước 2: Chờ và click vào nút 'Thêm mới'
+                    IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
 
-                // 🟢 Bước 3: Nhập thông tin sản phẩm hợp lệ
-                string productName = "Xiaomi Redmi K20 Pro";
-                driver.FindElement(By.Id("Tensp")).SendKeys(productName);
-                driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
-                driver.FindElement(By.Id("Soluong")).SendKeys("100");
-                driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
-                driver.FindElement(By.Id("Thesim")).SendKeys("2");
-                driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
-                driver.FindElement(By.Id("Ram")).SendKeys("8");
+                    // 🟢 Bước 3: Nhập thông tin sản phẩm hợp lệ
+                    string productName = "Xiaomi Redmi K20 Pro";
+                    driver.FindElement(By.Id("Tensp")).SendKeys(productName);
+                    driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
+                    driver.FindElement(By.Id("Soluong")).SendKeys("100");
+                    driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+                    driver.FindElement(By.Id("Thesim")).SendKeys("2");
+                    driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+                    driver.FindElement(By.Id("Ram")).SendKeys("8");
 
-                // 🟢 Bước 4: Chọn trạng thái, hãng, hệ điều hành
-                new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
-                new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
-                new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+                    // 🟢 Bước 4: Chọn trạng thái, hãng, hệ điều hành
+                    new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+                    new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+                    new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
 
-                // 🟢 Bước 5: Upload ảnh sản phẩm
-                driver.FindElement(By.Id("Anhbia")).SendKeys("/Images/files/ss3.jpg");
+                    // 🟢 Bước 5: Upload ảnh sản phẩm
+                    driver.FindElement(By.Id("Anhbia")).SendKeys("/Images/files/ss3.jpg");
 
-                // 🟢 Bước 6: Nhấn nút 'Thêm mới sản phẩm'
-                IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
-                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+                    // 🟢 Bước 6: Nhấn nút 'Thêm mới sản phẩm'
+                    IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
 
-                // 🟢 Bước 7: Chờ trang chuyển về Admin/Home
-                WaitForUrl("Admin/Home", 10);
+                    // 🟢 Bước 7: Chờ trang chuyển về Admin/Home
+                    WaitForUrl("Admin/Home", 10);
 
-                // 🟢 Bước 8: Kiểm tra sản phẩm có xuất hiện trong bảng tại Admin/Home không
-                IWebElement productCell = WaitForElement(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]"), 10);
-                Assert.IsNotNull(productCell, "❌ Test Failed: Sản phẩm không xuất hiện trong bảng trên trang Admin/Home.");
+                    // 🟢 Bước 8: Kiểm tra sản phẩm có xuất hiện trong bảng tại Admin/Home không
+                    IWebElement productCell = WaitForElement(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]"), 10);
 
-                Console.WriteLine("✅ Test Passed: Sản phẩm đã được thêm thành công và hiển thị trên Admin/Home!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Lỗi trong quá trình kiểm thử: " + ex.Message);
-                throw;
-            }
+                    Assert.IsNotNull(productCell, "❌ Test Failed: Sản phẩm không xuất hiện trong bảng trên trang Admin/Home.");
+
+                    Console.WriteLine("✅ Test Passed: Sản phẩm đã được thêm thành công và hiển thị trên Admin/Home!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("❌ Lỗi trong quá trình kiểm thử: " + ex.Message);
+                    throw;
+                }
         }
+
         private void WaitForUrl(string expectedUrlPart, int timeoutInSeconds)
         {
             for (int i = 0; i < timeoutInSeconds * 2; i++) // Kiểm tra mỗi 0.5 giây
@@ -167,7 +194,7 @@ namespace TestIctShop
             throw new TimeoutException($"❌ Lỗi: Không tìm thấy phần tử {by} sau {timeoutInSeconds} giây.");
         }
 
-        [Test]
+        [Test, Order(3)]
         public void AddProduct_CheckDuplicate()
         {
             try
@@ -239,7 +266,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(4)]
         public void AddProductVietnameseName()
         {
             try
@@ -289,7 +316,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(5)]
         public void AddProductNoQuantity()
         {
             try
@@ -355,7 +382,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(6)]
         public void AddProductNegativeQuantity()
         {
             try
@@ -421,7 +448,7 @@ namespace TestIctShop
                 throw;
             }
         }
-        [Test]
+        [Test, Order(7)]
         public void AddProductFractionalQuantity()
         {
             try
@@ -484,7 +511,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(8)]
         public void AddProductQuantityWithOperation()
         {
             try
@@ -547,7 +574,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(9)]
         public void AddProductBigQuantity()
         {
             try
@@ -610,7 +637,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(10)]
         public void AddProductNoPrice()
         {
             try
@@ -667,7 +694,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(11)]
         public void AddProductNegativePrice()
         {
             try
@@ -725,7 +752,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(12)]
         public void AddProductFractionalPrice()
         {
             try
@@ -777,7 +804,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(13)]
         public void AddProductPriceWithOperation()
         {
             try
@@ -830,7 +857,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(14)]
         public void AddProductSmallPrice()
         {
             try
@@ -883,7 +910,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(15)]
         public void AddProductBigPrice()
         {
             try
@@ -936,7 +963,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(16)]
         public void AddProduct5Sim()
         {
             try
@@ -989,7 +1016,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(17)]
         public void AddProductNoSim()
         {
             try
@@ -1041,7 +1068,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(18)]
         public void AddProductNegativeSim()
         {
             try
@@ -1094,7 +1121,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(19)]
         public void AddProductSimWithOperation()
         {
             try
@@ -1147,7 +1174,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(20)]
         public void AddProductNegativeInternalMemory()
         {
             try
@@ -1200,7 +1227,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(21)]
         public void AddProductNoInternalMemory()
         {
             try
@@ -1251,7 +1278,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(22)]
         public void AddProductInternalMemoryWithOperation()
         {
             try
@@ -1304,7 +1331,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(23)]
         public void AddProductFractionalInternalMemory()
         {
             try
@@ -1356,7 +1383,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(24)]
         public void AddProductNoRam()
         {
             try
@@ -1407,7 +1434,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(25)]
         public void AddProductNegativeRam()
         {
             try
@@ -1460,7 +1487,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(26)]
         public void AddProductFractionalRam()
         {
             try
@@ -1512,7 +1539,7 @@ namespace TestIctShop
             }
         }
 
-        [Test]
+        [Test, Order(27)]
         public void AddProductRamWithOperation()
         {
             try
@@ -1564,9 +1591,6 @@ namespace TestIctShop
                 throw;
             }
         }
-
-
-
         [TearDown]
         public void Cleanup()
         {
@@ -1576,6 +1600,58 @@ namespace TestIctShop
                 driver.Dispose();
                 driver = null;
             }
+            string status = TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed ? "Passed" : "Failed";
+            UpdateTestResult(filePath, currentRow, status);
+            currentRow++; // Chuyển sang test case tiếp theo
         }
+        private void UpdateTestResult(string filePath, int row, string status)
+        {
+            int statusColumn = 8; // Cột "Status" (cột H)
+
+            // Chờ file mở lại nếu đang bị khóa
+            while (IsFileLocked(filePath))
+            {
+                Console.WriteLine("⏳ File đang bị khóa, chờ 2 giây...");
+                Thread.Sleep(2000);
+            }
+
+            try
+            {
+                using (var workbook = new XLWorkbook(filePath))
+                {
+                    var worksheet = workbook.Worksheet(1);
+
+                    worksheet.Cell(row, statusColumn).Value = status;
+                    workbook.Save();
+                } // ✅ Workbook sẽ tự động đóng khi ra khỏi `using`
+
+                Console.WriteLine($"✅ Ghi kết quả vào Excel: Dòng {row}, Trạng thái: {status}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"❌ Lỗi: Không thể ghi vào file Excel! Chi tiết: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Lỗi không xác định: {ex.Message}");
+            }
+        }
+
+        private bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    return false; // File không bị khóa
+                }
+            }
+            catch (IOException)
+            {
+                return true; // File đang bị khóa
+            }
+        }
+
+
     }
 }
