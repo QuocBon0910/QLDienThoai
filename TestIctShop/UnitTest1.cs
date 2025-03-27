@@ -992,6 +992,140 @@ namespace TestIctShop
 
         }
 
+        [Test, Order(28)]
+        public void AddProductNoImage()
+        {
+            Login("Admin@gmail.com", "12345678");
+
+            IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+
+            driver.FindElement(By.Id("Tensp")).SendKeys("Điện thoại Xiaomi Redmi K20 Pro");
+            driver.FindElement(By.Id("Giatien")).SendKeys("6000000");
+            driver.FindElement(By.Id("Soluong")).SendKeys("5000");
+            driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+            driver.FindElement(By.Id("Thesim")).SendKeys("2");
+            driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+            driver.FindElement(By.Id("Ram")).SendKeys("8");
+
+            new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+            new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+            new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+
+            string initialUrl = driver.Url;
+            Console.WriteLine($"🔍 URL trước khi submit: {initialUrl}");
+
+            IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+
+
+            Assert.AreEqual(initialUrl, driver.Url, "❌ Test Failed: Hệ thống đã chuyển hướng, tức là sản phẩm vẫn được thêm!");
+
+        }
+
+        [Test, Order(29)]
+        public void AddProduct_CheckDuplicateImage()
+        {
+            Login("Admin@gmail.com", "12345678");
+
+            string imagePath = "/Images/files/ss3.jpg";
+
+            int existingImageCount = driver.FindElements(By.XPath($"//table[contains(@class,'table-bordered')]//img[contains(@src, '{imagePath}')]")).Count;
+            Assert.Fail($"❌ Test Failed: Đã có sản phẩm sử dụng ảnh '{imagePath}', không thể thêm trùng!");
+
+            IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+
+            driver.FindElement(By.Id("Tensp")).SendKeys("Sản phẩm test trùng ảnh");
+            driver.FindElement(By.Id("Giatien")).SendKeys("6000000");
+            driver.FindElement(By.Id("Soluong")).SendKeys("50");
+            driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm thử nghiệm trùng ảnh");
+            driver.FindElement(By.Id("Thesim")).SendKeys("2");
+            driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+            driver.FindElement(By.Id("Ram")).SendKeys("8");
+
+            new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+            new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+            new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+
+            driver.FindElement(By.Id("Anhbia")).SendKeys(imagePath);
+
+            IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+
+            int finalImageCount = driver.FindElements(By.XPath($"//table[contains(@class,'table-bordered')]//img[contains(@src, '{imagePath}')]")).Count;
+
+            Assert.AreEqual(existingImageCount, finalImageCount, $"❌ Test Failed: Hệ thống cho phép thêm sản phẩm có ảnh trùng '{imagePath}'!");
+        }
+        [Test, Order(30)]
+        public void AddProductInvalidImage()
+        {
+            Login("Admin@gmail.com", "12345678");
+
+            IWebElement addButton = wait.Until(d => d.FindElement(By.XPath("//p/button[@class='btn-default']/a")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", addButton);
+
+            string productName = "Xiaomi Redmi K20 Pro";
+            driver.FindElement(By.Id("Tensp")).SendKeys(productName);
+            driver.FindElement(By.Id("Giatien")).SendKeys("5000000");
+            driver.FindElement(By.Id("Soluong")).SendKeys("100");
+            driver.FindElement(By.Id("Mota")).SendKeys("Sản phẩm hot");
+            driver.FindElement(By.Id("Thesim")).SendKeys("2");
+            driver.FindElement(By.Id("Bonhotrong")).SendKeys("128");
+            driver.FindElement(By.Id("Ram")).SendKeys("8");
+
+            new SelectElement(driver.FindElement(By.Id("Sanphammoi"))).SelectByText("False");
+            new SelectElement(driver.FindElement(By.Id("Mahang"))).SelectByText("Sam Sung");
+            new SelectElement(driver.FindElement(By.Id("Mahdh"))).SelectByText("Android");
+
+            driver.FindElement(By.Id("Anhbia")).SendKeys("/Images/files/ss3.docx");
+
+            IWebElement submitButton = driver.FindElement(By.XPath("//input[@type='submit' and @value='Thêm mới sản phẩm']"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", submitButton);
+
+            WaitForUrl("Admin/Home", 10);
+
+            IWebElement productCell = WaitForElement(By.XPath($"//table[contains(@class,'table-bordered')]//td[contains(text(), '{productName}')]"), 10);
+
+            Assert.IsNotNull(productCell, "❌ Sản phẩm không xuất hiện trong bảng trên trang Admin/Home.");
+        }
+        [Test, Order(31)]
+        public void DeleteProduct()
+        {
+            Login("Admin@gmail.com", "12345678");
+
+            wait.Until(d => d.FindElement(By.XPath("//table[@class='table table-bordered']//tr[6]//td[last()]//button[contains(@class, 'btn-danger')]"))).Click();
+            string initialUrl = driver.Url;
+            Thread.Sleep(5000);
+
+            wait.Until(d => d.FindElement(By.XPath("//input[@type='submit' and @value='Xoá sản phẩm']"))).Click();
+
+            Thread.Sleep(5000);
+
+            string afterDeleteUrl = driver.Url;
+
+            Assert.AreNotEqual(initialUrl, afterDeleteUrl, "Xóa sản phẩm thành công trong khi không được phép.");
+        }
+
+        [Test, Order(32)]
+        public void DeleteProducHasBeenOrdered()
+        {
+            Login("Admin@gmail.com", "12345678");
+
+            wait.Until(d => d.FindElement(By.XPath("//table[@class='table table-bordered']//tr[2]//td[last()]//button[contains(@class, 'btn-danger')]"))).Click();
+            string initialUrl = driver.Url;
+            Thread.Sleep(5000);
+
+            wait.Until(d => d.FindElement(By.XPath("//input[@type='submit' and @value='Xoá sản phẩm']"))).Click();
+
+            Thread.Sleep(5000);
+
+            string afterDeleteUrl = driver.Url;
+
+            Assert.AreEqual(initialUrl, afterDeleteUrl, "Xóa sản phẩm thành công khi không được phép.");
+        }
+
+
         [TearDown]
         public void Cleanup()
         {
@@ -1024,7 +1158,7 @@ namespace TestIctShop
 
                     worksheet.Cell(row, statusColumn).Value = status;
                     workbook.Save();
-                } // ✅ Workbook sẽ tự động đóng khi ra khỏi `using`
+                } 
 
                 Console.WriteLine($"✅ Ghi kết quả vào Excel: Dòng {row}, Trạng thái: {status}");
             }
@@ -1044,12 +1178,12 @@ namespace TestIctShop
             {
                 using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    return false; // File không bị khóa
+                    return false; 
                 }
             }
             catch (IOException)
             {
-                return true; // File đang bị khóa
+                return true; 
             }
         }
 
