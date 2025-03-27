@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FCCCBF5E-3598-4583-BD04-709CB69929C6}|TestIctShop\\TestQLSP-QuocDat.csproj|c:\\users\\dat\\downloads\\ictshop_aspnet-update2023-v1\\testictshop\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FCCCBF5E-3598-4583-BD04-709CB69929C6}|TestIctShop\\TestQLSP-QuocDat.csproj|solutionrelative:testictshop\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E34AD3E6-D22D-4792-975C-31D062E773A9}|Ictshop\\Ictshop.csproj|C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\ictshop\\views\\user\\dangnhap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{E34AD3E6-D22D-4792-975C-31D062E773A9}|Ictshop\\Ictshop.csproj|solutionrelative:ictshop\\views\\user\\dangnhap.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FCCCBF5E-3598-4583-BD04-709CB69929C6}|TestIctShop\\TestQLSP-QuocDat.csproj|c:\\users\\dat\\downloads\\ictshop_aspnet-update2023-v1\\testictshop\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FCCCBF5E-3598-4583-BD04-709CB69929C6}|TestIctShop\\TestQLSP-QuocDat.csproj|solutionrelative:testictshop\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E34AD3E6-D22D-4792-975C-31D062E773A9}|Ictshop\\Ictshop.csproj|C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\ictshop\\views\\home\\contact.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
@@ -83,20 +83,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "UnitTest1.cs",
               "DocumentMoniker": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\UnitTest1.cs",
               "RelativeDocumentMoniker": "TestIctShop\\UnitTest1.cs",
               "ToolTip": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\TestIctShop\\UnitTest1.cs",
               "RelativeToolTip": "TestIctShop\\UnitTest1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAADYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-17T10:28:13.783Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Dangnhap.cshtml",
               "DocumentMoniker": "C:\\Users\\Dat\\Downloads\\ictshop_aspnet-update2023-v1\\Ictshop\\Views\\User\\Dangnhap.cshtml",
               "RelativeDocumentMoniker": "Ictshop\\Views\\User\\Dangnhap.cshtml",
@@ -130,8 +130,7 @@
               "RelativeToolTip": "Ictshop\\Models\\Sanpham.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAAACgAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T08:07:25.364Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T08:07:25.364Z"
             }
           ]
         }
